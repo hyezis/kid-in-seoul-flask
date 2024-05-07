@@ -13,7 +13,7 @@ conn = pymysql.connect(
 )
 cursor = conn.cursor()
 
-df = pd.read_csv('./csv/park_mount.csv', encoding='utf-8')
+df = pd.read_csv('./csv2database/csv/park_mount.csv', encoding='utf-8')
 
 selected_columns = ['주소', '대표전화', '대분류', '행정 동', '행정 구', '행정 시']
 

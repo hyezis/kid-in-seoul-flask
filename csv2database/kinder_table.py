@@ -13,7 +13,7 @@ conn = pymysql.connect(
 )
 cursor = conn.cursor()
 
-df = pd.read_csv('./csv/kinder.csv', encoding='utf-8')
+df = pd.read_csv('./csv2database/csv/kinder.csv', encoding='utf-8')
 
 selected_columns = ['상세주소', '팩스번호', '제공서비스', '어린이집명', '전화번호', '우편번호', '시군구명', '어린이집유형']
 
