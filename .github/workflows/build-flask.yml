@@ -1,0 +1,57 @@
+name: Flask CI 
+
+on:
+  push:
+    branches: [ "develop" ]
+  pull_request:
+    branches: [ "develop" ]
+
+permissions:
+  contents: read
+
+jobs:
+  CI-CD:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.1"
+      - run: python -c "print('hello world')"
+      
+      - name: Build & Push Docker image
+        uses: mr-smithers-excellent/docker-build-push@v5
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/kids-in-seoul-flask .
+          docker push ${{ secrets.DOCKER_USERNAME }}/kids-in-seoul-falsk:latest
+
+      - name: SSH into development server and deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST_DEV }}
+          username: ${{ secrets.HOST_USERNAME }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          script: |
+            docker pull ${{ secrets.DOCKER_USERNAME }}/kids-in-seoul-flask:latest
+            docker stop flask-app || true
+            docker rm flask-app || true
+            docker run -d --name flask-app -p 5000:5000 ${{ secrets.DOCKER_USERNAME }}/kids-in-seoul-flask:latest
+
+
+## time
+  current-time:
+    needs: CI-CD
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Current Time
+        uses: 1466587594/get-current-time@v2
+        id: current-time
+        with:
+          format: YYYY-MM-DDTHH:mm:ss
+          utcOffset: "+09:00"
+      - name: Print Current Time
+        run: echo "Current Time=${{steps.current-time.outputs.formattedTime}}"
+        shell: bash
