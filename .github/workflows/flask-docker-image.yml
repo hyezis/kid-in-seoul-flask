@@ -1,0 +1,16 @@
+name: Python Flask Github action for docker repository
+on: 
+  push:
+    branches: [ kid-in-seoul-flask ]
+  pull_request:
+    branches: [ kid-in-seoul-flask ]
+
+# Env variable
+env:
+  DOCKER_USER: ${{secrets.DOCKER_USERNAME}}
+  DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+jobs:
+  flask-image-to-docker-hub:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2

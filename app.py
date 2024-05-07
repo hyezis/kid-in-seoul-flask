@@ -65,4 +65,4 @@ def recommend():
     return jsonify({"recommendations": result}), 200
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(prot=8070,debug=False)
