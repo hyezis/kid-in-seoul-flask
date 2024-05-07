@@ -13,7 +13,7 @@ conn = pymysql.connect(
 )
 cursor = conn.cursor()
 
-df = pd.read_csv('./csv/art_gallery.csv', encoding='utf-8')
+df = pd.read_csv('./csv2database/csv/art_gallery.csv', encoding='utf-8')
 
 selected_columns = ['소재지도로명주소', '어른관람료', '어린이관람료', '관리기관전화번호', '운영홈페이지']
 

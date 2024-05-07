@@ -13,12 +13,12 @@ conn = pymysql.connect(
 )
 cursor = conn.cursor()
 
-df = pd.read_csv('./csv/park.csv', encoding='utf-8')
+df = pd.read_csv('./csv2database/csv/park.csv', encoding='utf-8')
 
 selected_columns = ['공원주소', '전화번호', '지역']
 
-# 348~479
-df['facility_id'] = range(348, 480)
+# 3863~3994
+df['facility_id'] = range(3863, 3995)
 
 df_selected = df[selected_columns + ['facility_id']]
 
