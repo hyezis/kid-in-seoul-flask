@@ -50,7 +50,7 @@ jobs:
           script : |
             docker rm -f $(docker ps -qa)
             docker pull ${{ secrets.DOCKER_USERNAME }}/kids-in-seoul-flask
-            docker-compose up -d
+            docker-compose up -d flask
             docker image prune -f
 
 
