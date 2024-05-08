@@ -30,6 +30,11 @@ jobs:
           pip install -r requirements.txt
       
       - name: run flask
+        env:
+          DB_HOST: ${{secrets.DB_HOST}}
+          DB_NAME: ${{secrets.DB_NAME}}
+          DB_USER: ${{secrets.DB_USER}}
+          DB_PASSWORD: ${{secrets.DB_PASSWORD}}
         run: |
           . venv/bin/activate
           export FLASK_APP=app.py
