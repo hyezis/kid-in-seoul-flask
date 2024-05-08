@@ -1,4 +1,4 @@
-import os
+import config
 from flask import Flask, request, jsonify
 import pymysql
 from sklearn.metrics.pairwise import cosine_similarity
@@ -7,11 +7,11 @@ app = Flask(__name__)
 
 def connect_to_database():
     return pymysql.connect(
-        host=os.environ['DB_HOST'], 
+        host=config.DB_CONFIG['host'], 
         port=3306, 
-        user=os.environ['DB_USER'], 
-        passwd=os.environ['DB_PASSWORD'], 
-        db=os.environ['DB_NAME'], 
+        user=config.DB_CONFIG['user'], 
+        passwd=config.DB_CONFIG['passwd'], 
+        db=config.DB_CONFIG['db'], 
         charset='utf8'
     )
 
