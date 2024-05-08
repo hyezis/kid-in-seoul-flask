@@ -31,7 +31,6 @@ jobs:
           flask run --host=0.0.0.0 --port=5000 &
       
       - name: Build & Push Docker image
-        uses: mr-smithers-excellent/docker-build-push@v5
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -t ${{ secrets.DOCKER_USERNAME }}/kids-in-seoul-flask .
@@ -43,11 +42,11 @@ jobs:
           host: ${{ secrets.HOST_DEV }}
           username: ${{ secrets.HOST_USERNAME }}
           key: ${{ secrets.PRIVATE_KEY }}
-          script: |
-          docker rm -f $(docker ps -qa)
-          docker pull ${{ secrets.DOCKER_USERNAME }}/kids-in-seoul-flask
-          docker-compose up -d
-          docker image prune -f
+          run : |
+            docker rm -f $(docker ps -qa)
+            docker pull ${{ secrets.DOCKER_USERNAME }}/kids-in-seoul-flask
+            docker-compose up -d
+            docker image prune -f
 
 
 ## time
