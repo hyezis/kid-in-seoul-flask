@@ -2,9 +2,9 @@ name: Flask CI
 
 on:
   push:
-    branches: [ "develop" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "develop" ]
+    branches: [ "main" ]
 
 permissions:
   contents: read
@@ -41,11 +41,12 @@ jobs:
 
       - name: SSH into development server and deploy
         uses: appleboy/ssh-action@master
+        if : contains(github.ref,'main')
         with:
           host: ${{ secrets.HOST_DEV }}
           username: ${{ secrets.HOST_USERNAME }}
           key: ${{ secrets.PRIVATE_KEY }}
-          run : |
+          script : |
             docker rm -f $(docker ps -qa)
             docker pull ${{ secrets.DOCKER_USERNAME }}/kids-in-seoul-flask
             docker-compose up -d
