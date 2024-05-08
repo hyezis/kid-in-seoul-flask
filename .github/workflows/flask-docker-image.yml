@@ -1,16 +1,66 @@
-name: Python Flask Github action for docker repository
-on: 
-  push:
-    branches: [ kid-in-seoul-flask ]
-  pull_request:
-    branches: [ kid-in-seoul-flask ]
+name: Flask CI 
 
-# Env variable
-env:
-  DOCKER_USER: ${{secrets.DOCKER_USERNAME}}
-  DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+on:
+  push:
+    branches: [ "develop" ]
+  pull_request:
+    branches: [ "develop" ]
+
+permissions:
+  contents: read
+
 jobs:
-  flask-image-to-docker-hub:
+  CI-CD:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.1"
+      - run: |
+          python -m venv venv
+          . venv/bin/activate
+          pip install -r requirements.txt
+      
+      - name: run flask
+      - run: |
+          . venv/bin/activate
+          export FLASK_APP=app.py
+          flask run --host=0.0.0.0 --port=5000 &
+      
+      - name: Build & Push Docker image
+        uses: mr-smithers-excellent/docker-build-push@v5
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/kids-in-seoul-flask .
+          docker push ${{ secrets.DOCKER_USERNAME }}/kids-in-seoul-falsk:latest
+
+      - name: SSH into development server and deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST_DEV }}
+          username: ${{ secrets.HOST_USERNAME }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          script: |
+          docker rm -f $(docker ps -qa)
+          docker pull ${{ secrets.DOCKER_USERNAME }}/kids-in-seoul-flask
+          docker-compose up -d
+          docker image prune -f
+
+
+## time
+  current-time:
+    needs: CI-CD
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+      - name: Get Current Time
+        uses: 1466587594/get-current-time@v2
+        id: current-time
+        with:
+          format: YYYY-MM-DDTHH:mm:ss
+          utcOffset: "+09:00"
+      - name: Print Current Time
+        run: echo "Current Time=${{steps.current-time.outputs.formattedTime}}"
+        shell: bash
