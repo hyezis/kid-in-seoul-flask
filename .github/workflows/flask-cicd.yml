@@ -23,21 +23,17 @@ jobs:
         with:
           python-version: "3"
 
+
+      - name: set config.py
+        run: |
+          cd .
+          touch ./config.py
+          echo "${{ secrets.CONFIG_DEV }}" >> ./config.py
       - name: make venv
         run: |
           python -m venv venv
           . venv/bin/activate
           pip install -r requirements.txt
-      
-      - name: run flask
-        env:
-          DB_HOST: ${{secrets.DB_HOST}}
-          DB_NAME: ${{secrets.DB_NAME}}
-          DB_USER: ${{secrets.DB_USER}}
-          DB_PASSWORD: ${{secrets.DB_PASSWORD}}
-        run: |
-          . venv/bin/activate
-          export FLASK_APP=app.py
       
       - name: Build & Push Docker image
         run: |
