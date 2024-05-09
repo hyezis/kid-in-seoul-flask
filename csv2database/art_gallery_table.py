@@ -17,8 +17,8 @@ df = pd.read_csv('./csv2database/csv/art_gallery.csv', encoding='utf-8')
 
 selected_columns = ['소재지도로명주소', '어른관람료', '어린이관람료', '관리기관전화번호', '운영홈페이지']
 
-# 1~175
-df['facility_id'] = range(1,176)
+# 4140~4314
+df['facility_id'] = range(4140, 4315)
 
 df_selected = df[selected_columns + ['facility_id']]
 
