@@ -25,8 +25,7 @@ region_mapping = {
     '용산구': 21, '은평구': 22, '종로구': 23, '중구': 24, '중랑구': 25
 }
 df['region_id'] = df['행정 구'].map(region_mapping)
-df.loc[df['행정 구'].isna(), 'region_id'] = 26
-print(df['region_id'])
+df.loc[df['행정 구'].isna() | (df['region_id'].isna()), 'region_id'] = 26
 
 df['facility_type'] = 'PARK'
 

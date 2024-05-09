@@ -26,7 +26,7 @@ region_mapping = {
     '용산구': 21, '은평구': 22, '종로구': 23, '중구': 24, '중랑구': 25
 }
 df['region_id'] = df['자치구명'].map(region_mapping)
-df = df.dropna(subset=['region_id'])
+df.loc[df['자치구명'].isna() | (df['region_id'].isna()), 'region_id'] = 26
 print(df['region_id'])
 
 df['facility_type'] = 'GALLERY'
@@ -36,7 +36,7 @@ df_selected = df_selected.fillna('')
 
 query = f"INSERT INTO facility (name, facility_type, region_id) VALUES (%s, %s, %s);"
 
-for index, row in df.iterrows():
+for index, row in df_selected.iterrows():
 
     cursor.execute(query, tuple(row))
 
