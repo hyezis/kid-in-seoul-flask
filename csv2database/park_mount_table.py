@@ -17,8 +17,8 @@ df = pd.read_csv('./csv2database/csv/park_mount.csv', encoding='utf-8')
 
 selected_columns = ['주소', '대표전화', '대분류', '행정 동', '행정 구', '행정 시']
 
-# 203~347
-df['facility_id'] = range(203, 348)
+# 3995~4139
+df['facility_id'] = range(3995, 4140)
 
 df_selected = df[selected_columns + ['facility_id']]
 
