@@ -2,8 +2,10 @@ import config
 from flask import Flask, request, jsonify
 import pymysql
 from sklearn.metrics.pairwise import cosine_similarity
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app, origins=["https://main--kid-in-seoul.netlify.app", "https://main--kid-in-seoul.netlify.app"])
 
 def connect_to_database():
     return pymysql.connect(
